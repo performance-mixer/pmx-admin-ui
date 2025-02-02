@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Protobuf Include="../../pmx-grpc/proto/input_ports.proto" GrpcServices="Client"/>
+        <Protobuf Include="../../pmx-grpc/proto/mono_port.proto" GrpcServices="Client"/>
+        <Protobuf Include="../../pmx-grpc/proto/output_ports.proto" GrpcServices="Client"/>
+        <Protobuf Include="../../pmx-grpc/proto/pmx_grpc.proto" GrpcServices="Client"/>
+        <Protobuf Include="../../pmx-grpc/proto/port.proto" GrpcServices="Client"/>
+        <Protobuf Include="../../pmx-grpc/proto/generic.proto" GrpcServices="Client"/>
+        <Protobuf Include="../../pmx-grpc/proto/stereo_port.proto" GrpcServices="Client"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Google.Protobuf" Version="3.29.3"/>
+        <PackageReference Include="Grpc.Net.Client" Version="2.67.0"/>
+        <PackageReference Include="Grpc.Tools" Version="2.69.0">
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+            <PrivateAssets>all</PrivateAssets>
+        </PackageReference>
+    </ItemGroup>
+</Project>

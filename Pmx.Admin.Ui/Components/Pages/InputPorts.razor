@@ -1,0 +1,65 @@
+@page "/input_ports"
+@using Pmx.Admin.Ui.Services
+@rendermode InteractiveServer
+@inject IPmxGrpcService PmxGrpcService
+
+<h3>Inputs</h3>
+
+<table class="table table-bordered table-striped">
+    <thead>
+    <tr>
+        <th>Input</th>
+        <th>Stereo</th>
+        <th>Source</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var portSetup in _inputPortCollection)
+    {
+        <tr>
+            @if (portSetup.IsValid)
+            {
+                <td rowspan="2">@(portSetup.DisplayChannelId)</td>
+            }
+            else
+            {
+                <td>@(portSetup.DisplayChannelId)</td>
+            }
+            <td rowspan="2">
+                <input type="checkbox" @bind="@portSetup.IsStereo"
+                       @bind:after="() => HandleInputPortSetupChanged(portSetup)"
+                />
+            </td>
+            <td>
+                <select
+                    @bind="@portSetup.Left"
+                    @bind:after="() => HandleInputPortSetupChanged(portSetup)"
+                    class="form-select">
+                    <option value="@(null as string)">Select a Port</option>
+                    @foreach (var port in _ports)
+                    {
+                        <option value="@port.Alias">@port.Alias</option>
+                    }
+                </select>
+            </td>
+        </tr>
+        <tr>
+            @if (!portSetup.IsValid)
+            {
+                <td>@(portSetup.ErrorMessage)</td>
+            }
+            <td>
+                <select @bind="portSetup.Right" class="form-select"
+                        @bind:after="() => HandleInputPortSetupChanged(portSetup)"
+                        disabled="@(!portSetup.IsStereo)">
+                    <option value="@(null as string)">@(null as string)</option>
+                    @foreach (var port in _ports)
+                    {
+                        <option value="@port.Alias">@port.Alias</option>
+                    }
+                </select>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

@@ -1,0 +1,40 @@
+@page "/ports"
+@using Pmx.Admin.Ui.Services
+@using Pmx.Grpc
+@inject IPmxGrpcService PmxGrpcService
+
+<PageTitle>Ports</PageTitle>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>Port Alias</th>
+        <th>Port ID</th>
+        <th>Node ID</th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var port in _ports)
+    {
+        <tr>
+            <td>@port.Alias</td>
+            <td>@port.Id</td>
+            <td>@port.NodeId</td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        var ports = await PmxGrpcService.GetPorts();
+        _ports = ports.Where(p => p.Direction == PortDirection.Out)
+            .ToList();
+    }
+
+    private IList<ListPort> _ports = [];
+
+}
+
