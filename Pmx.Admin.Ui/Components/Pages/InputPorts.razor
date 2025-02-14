@@ -11,6 +11,7 @@
         <th>Input</th>
         <th>Stereo</th>
         <th>Source</th>
+        <th>Group</th>
     </tr>
     </thead>
     <tbody>
@@ -40,6 +41,16 @@
                     {
                         <option value="@port.Alias">@port.Alias</option>
                     }
+                </select>
+            </td>
+            <td rowspan="2">
+                <select @bind="portSetup.GroupChannelId"
+                        @bind:after="() => HandleInputPortSetupChanged(portSetup)"
+                        class="form-select">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
                 </select>
             </td>
         </tr>

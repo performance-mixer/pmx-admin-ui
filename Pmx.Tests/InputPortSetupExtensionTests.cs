@@ -9,9 +9,9 @@ public class InputPortSetupExtensionTests
     {
         var result = new List<InputPortSetup>
         {
-            new("my_port_1", 3),
-            new("my_port_2", 4),
-            new("my_port_3", 6)
+            new("my_port_1", 3, 0),
+            new("my_port_2", 4, 0),
+            new("my_port_3", 6, 0)
         };
 
         var channelIds = result.FillGaps()

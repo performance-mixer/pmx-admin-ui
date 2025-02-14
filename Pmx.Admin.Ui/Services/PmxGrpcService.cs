@@ -3,7 +3,10 @@ using Pmx.Grpc;
 
 namespace Pmx.Admin.Ui.Services;
 
-public record InputPortSetup(string? PortAlias, uint ChannelId);
+public record InputPortSetup(
+    string? PortAlias,
+    uint ChannelId,
+    uint GroupChannelId);
 
 public static class InputPortSetupExtensions
 {
@@ -17,7 +20,7 @@ public static class InputPortSetupExtensions
             var actualChannelId = setup.ChannelId;
             while (expectedChannelId < actualChannelId)
             {
-                yield return new(null, expectedChannelId);
+                yield return new(null, expectedChannelId, 0);
                 expectedChannelId++;
             }
 
@@ -31,7 +34,7 @@ public interface IPmxGrpcService
 {
     Task<IList<ListPort>> GetPorts();
     Task<IList<InputPortSetup>> GetInputPortsSetup();
-    Task SetupInputPort(uint channelId, string port);
+    Task SetupInputPort(uint channelId, string port, uint groupChannelId);
     AsyncUnaryCall<Response> ClearInputPort(uint channelId);
 }
 
@@ -47,14 +50,17 @@ public class PmxGrpcService(PmxGrpc.PmxGrpcClient client) : IPmxGrpcService
     {
         var response = await client.ListInputPortsSetupAsync(new(), new());
         return response.Setups
-            .Select(s => new InputPortSetup(s.Port, s.ChannelId))
+            .Select(s =>
+                new InputPortSetup(s.Port, s.ChannelId, s.GroupChannelId))
             .FillGaps()
             .ToList();
     }
 
-    public async Task SetupInputPort(uint channelId, string? port)
+    public async Task SetupInputPort(uint channelId, string? port,
+        uint groupChannelId)
     {
-        var request = new SetupInputPortRequest { ChannelId = channelId, Port = port };
+        var request = new SetupInputPortRequest
+            { ChannelId = channelId, Port = port, GroupChannelId = groupChannelId};
         await client.SetupInputPortAsync(request);
     }
 

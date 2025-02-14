@@ -15,15 +15,15 @@ public partial class InputPorts
             case { IsStereo: true, Left: not null, Right: not null } when
                 inputPortSetup.Left != inputPortSetup.Right:
                 PmxGrpcService.SetupInputPort(inputPortSetup.LeftChannelId,
-                    inputPortSetup.Left);
+                    inputPortSetup.Left, inputPortSetup.GroupChannelId);
                 PmxGrpcService.SetupInputPort(inputPortSetup.RightChannelId,
-                    inputPortSetup.Right);
+                    inputPortSetup.Right, inputPortSetup.GroupChannelId);
                 inputPortSetup.IsValid = true;
                 inputPortSetup.ErrorMessage = "";
                 break;
             case { IsStereo: false, Left: not null }:
                 PmxGrpcService.SetupInputPort(inputPortSetup.LeftChannelId,
-                    inputPortSetup.Left);
+                    inputPortSetup.Left, inputPortSetup.GroupChannelId);
                 PmxGrpcService.ClearInputPort(inputPortSetup.RightChannelId);
                 inputPortSetup.IsValid = true;
                 inputPortSetup.ErrorMessage = "";
@@ -53,7 +53,7 @@ public partial class InputPorts
                 : inputSetups.Last()
                     .ChannelId + 1;
 
-            inputSetups.Add(new(null, nextChannelId));
+            inputSetups.Add(new(null, nextChannelId, 0));
         }
 
         _inputPortCollection = inputSetups
@@ -78,7 +78,8 @@ public partial class InputPorts
                         channelAlias,
                         left.ChannelId,
                         right.ChannelId,
-                        displayChannelId
+                        displayChannelId,
+                        left.GroupChannelId + 1
                     );
                 }
 
@@ -88,7 +89,8 @@ public partial class InputPorts
                     right.PortAlias,
                     left.ChannelId,
                     right.ChannelId,
-                    displayChannelId
+                    displayChannelId,
+                    left.GroupChannelId + 1
                 );
             })
             .ToList();
@@ -106,6 +108,7 @@ public partial class InputPorts
         uint LeftChannelId,
         uint RightChannelId,
         uint DisplayChannelId,
+        uint GroupChannelId,
         bool IsValid = true,
         string? ErrorMessage = null)
     {
@@ -114,5 +117,6 @@ public partial class InputPorts
         public bool IsValid { get; set; } = IsValid;
         public string? ErrorMessage { get; set; } = ErrorMessage;
         public bool IsStereo { get; set; } = IsStereo;
+        public uint GroupChannelId { get; set; } = GroupChannelId;
     }
 }
