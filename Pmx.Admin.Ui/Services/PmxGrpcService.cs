@@ -16,11 +16,11 @@ public static class InputPortSetupExtensions
         InputPortSetup? lastSetup = null;
         foreach (var setup in setups)
         {
-            var expectedChannelId = lastSetup?.ChannelId + 1 ?? 0;
+            var expectedChannelId = lastSetup?.ChannelId + 1 ?? 1;
             var actualChannelId = setup.ChannelId;
             while (expectedChannelId < actualChannelId)
             {
-                yield return new(null, expectedChannelId, 0);
+                yield return new(null, expectedChannelId, 1);
                 expectedChannelId++;
             }
 
@@ -52,7 +52,6 @@ public class PmxGrpcService(PmxGrpc.PmxGrpcClient client) : IPmxGrpcService
         return response.Setups
             .Select(s =>
                 new InputPortSetup(s.Port, s.ChannelId, s.GroupChannelId))
-            .FillGaps()
             .ToList();
     }
 

@@ -49,11 +49,11 @@ public partial class InputPorts
         while (inputSetups.Count < 32)
         {
             var nextChannelId = inputSetups.Count == 0
-                ? 0
+                ? 1
                 : inputSetups.Last()
                     .ChannelId + 1;
 
-            inputSetups.Add(new(null, nextChannelId, 0));
+            inputSetups.Add(new(null, nextChannelId, 1));
         }
 
         _inputPortCollection = inputSetups
@@ -79,7 +79,7 @@ public partial class InputPorts
                         left.ChannelId,
                         right.ChannelId,
                         displayChannelId,
-                        left.GroupChannelId + 1
+                        left.GroupChannelId
                     );
                 }
 
@@ -90,7 +90,7 @@ public partial class InputPorts
                     left.ChannelId,
                     right.ChannelId,
                     displayChannelId,
-                    left.GroupChannelId + 1
+                    left.GroupChannelId
                 );
             })
             .ToList();
